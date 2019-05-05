@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "Kullanıcılar Listesi";
+}
+@using MVC_CircloidTemplate.Models;
+@model MembershipUserCollection
+
+@section head
+	{
+    <script src="~/Content/assets/js/required/jquery-1.11.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".addRole").on('click', function () {
+                const username = $(this).attr("data-username");
+                console.log(username);
+                window.location.href = "/UserAccount/AssignRole?username=" + username;
+                //window.location.href="/User/AssignRole/"+username;
+            })
+        
+            @**********************************************************SİLME İÇİN AJAX KODLARI ********************************************@
+
+            $(".muSil").click(function () {
+                var sonuc = confirm("Kayıt silinsin mi?");
+             if (sonuc) {
+                 var muUser = $(this).attr("data-muUserName");
+                    $.ajax({
+                     type: "POST",
+                        url: "/UserAccount/DeleteUserAccount?UserName=" + muUser,
+                        success: function () {
+                            alert("Kayıt silindi");
+                            window.location.replace("/UserAccount/Index");
+                        },
+                        error: function () {
+                            alert("Kayıt silme sırasında hata oluştu.");
+                        }
+                 })
+             }
+            });
+        });
+    </script>
+}
+@******************************************************************************************************************************@
+<div class="row">
+    <div class="col-md-12">
+        @*  6'yı 12 yaptık.Tam ekranda göstermek için. Ekranın yarısında göstermek için 6 yazılır. BOOTSRAP'in -Responsive- özelliği   *@
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+                    Kullanıcılar
+                </div>
+                <div class="block-controls">
+                    @*<a href="/Product/AddProduct"> </a>*@
+                    @*<button type="button" class="btn btn-success rounded">Ürün Ekle</button>*@
+                    <span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>   @*  aşağı doğru açılır kapanır.collapse yapar.*@
+                    <a href="/UserAccount/AddUserAccount" class="btn btn-success rounded">Kullanıcı Ekle</a>    @*KULLANICI EKLE BUTONUNA TIKLANDIĞINDA *@
+                </div>
+            </div>
+            <div class="block-content-outer">
+                <div class="block-content-inner">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Kullanıcı Adı</th>  @*  Bunların her biri bir kolon açar.  *@
+                                <th>Email</th>
+                                <th>Kayıt Tarihi</th>
+                                <th>Son Giriş Tarihi</th>
+                                <th>Rolleri</th>
+                                <th>Rol Ata</th>
+                                <th>Ajax ile Sil</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (MembershipUser mu in Model)
+                            {
+                                <tr>
+                                    <td>@mu.UserName</td>
+                                    <td>@mu.Email</td>
+                                    <td>@mu.CreationDate</td>
+                                    <td>@mu.LastLoginDate</td>
+
+                                    <td><a href="#" class="btn btn-primary roles" data-username="@mu.UserName">Rolleri</a></td>
+
+                                    <td><a class="btn btn-primary addRole" data-username="@mu.UserName">Rol Ata</a></td>
+                                    @******ROL ATA İÇİN ****** burda href eklemedik.JQuery kodunda Metot içinde ekledik*@
+                                    <td><a href="#" class="btn btn-danger rounded muSil" data-muUserName="@mu.UserName">Üye Sil</a></td>
+                                    @*  **********AJAX ile silme işlemi için***********  *@
+
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

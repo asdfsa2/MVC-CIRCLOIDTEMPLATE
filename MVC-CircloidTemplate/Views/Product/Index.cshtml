@@ -1,0 +1,139 @@
+﻿
+@{
+    ViewBag.Title = "Ürünler";
+}
+@using MVC_CircloidTemplate.Models;
+@model List<Product>
+@*Buraya table ekledik. Kodları tables-basic.html dosyasından aldık.*@
+<div class="row">
+    <div class="col-md-12">
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+                    Ürünler
+                </div>
+                <div class="block-controls">
+                    @*<a href="/Product/AddProduct"> </a>*@
+                    @*<button type="button" class="btn btn-success rounded">Ürün Ekle</button>*@
+                    <span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>  @*aşağı doğru açılır kapanır.collapse yapar.*@
+                    <a href="/Product/AddProduct" class="btn btn-success rounded">Ürün Ekle</a>
+                </div>
+            </div>
+            <div class="block-content-outer">
+                <div class="block-content-inner">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Ürün Adı</th>
+                                <th>Tedarikçi</th>
+                                <th>Kategori</th>
+                                <th>Birimdeki Miktar</th>
+                                <th>Birim Fiyat</th>
+                                <th>Stok</th>
+                                <th>Siparişteki Miktar</th>
+                                <th>Yeniden Sipariş Miktarı</th>
+                                <th>Sonlandı</th>
+                                <th>Sepete Ekle</th>
+                                <th>Güncelleme</th>
+                                <th>Sor-Sil</th>   @*Tablo içerisine sil kolonu için*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Product prd in Model)
+                            {
+                                <tr>
+                                    <td>@prd.ProductName</td>
+                                    @if (prd.SupplierID == null)
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <span class="label label-info">@prd.Supplier.CompanyName</span>   @*Renklendirmeyi açık mavi yaptık*@
+                                        </td>
+                                    }
+
+                                    @if (prd.CategoryID == null)
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <span class="label label-primary">@prd.Category.CategoryName</span>   @*Renklendirmeyi koyu mavi yaptık*@
+
+                                        </td>
+                                    }
+                                    <td>@prd.QuantityPerUnit</td>
+                                    <td>@prd.UnitPrice</td>
+                                    <td>@prd.UnitsInStock</td>
+                                    <td>@prd.UnitsOnOrder</td>
+                                    <td>@prd.ReorderLevel</td>
+                                    @if (prd.Discontinued)
+                                    {
+
+                                        <td>
+                                            <span class="label label-danger">Satışta Yok</span>   @*Renklendirmeyi kırmızı yaptık*@
+                                        </td>
+                                        <td><a class="btn btn-default rounded sepeteEkle" data-id="@prd.ProductID" href="#" disabled>Sepete Ekle</a></td>
+
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <span class="label label-success">Satışta Var</span>    @*Renklendirmeyi yeşil yaptık*@
+                                        </td>
+                                        <td><a class="btn btn-default rounded sepeteEkle" data-id="@prd.ProductID" href="#">Sepete Ekle</a></td>
+                                    }
+                                    @*<td><a href="/Product/UpdateProduct?prdID=@prd.ProductID" class="btn btn-primary rounded">Güncelle</a></td>*@
+
+                                    <td><a href="/Product/UpdateProduct?id=@prd.ProductID &pName=@prd.ProductName&pFrom=Güncelleme" class="btn btn-primary rounded">Güncelle</a></td>@*Silme butonu ekledik*@
+                                    <td><a href="/Product/DeleteProduct?prdID=@prd.ProductID" class="btn btn-danger rounded">Sil</a></td>   @*Silme butonu ekledik*@
+                                    @*Burada sil butonuna tıklanan ürünün ID'sini alıp controllera yollar.*@
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(".sepeteEkle").click(function () {
+            var id = $(this).attr("data-id");
+            $.ajax({
+                type: "POST",
+                url: "/Product/AddCart/" + id,
+                success: function (messageAddCart) {
+					alert(messageAddCart);
+
+					$.ajax({
+						type: "GET",
+						url: "/Product/PartialProductView",
+						success: function (response) {
+							$("#sepet").html(response);
+
+						},
+
+						error: function () {
+							alert("Ürün sayısını getirme sırasında hata oluştu");
+
+						}
+
+					});
+
+                },
+                error: function () {
+                    alert("Sepete eklenirken ajax hatası oluştu");
+
+                }
+
+            });
+
+        });
+    </script>
+}

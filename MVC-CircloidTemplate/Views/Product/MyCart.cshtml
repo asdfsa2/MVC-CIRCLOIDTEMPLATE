@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "Sepet";
+}
+@using MVC_CircloidTemplate.Models;
+@model List<Product>
+@*Buraya table ekledik. Kodları tables-basic.html dosyasından aldık.*@
+<div class="row">
+    <div class="col-md-12">
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+                    Sepetteki Ürünler
+                </div>
+                <div class="block-controls">
+                @*<a href="/Product/Index"> </a>*@
+                @*<button type="button" class="btn btn-success rounded">Ürün Ekle</button>*@
+                <span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>
+                <a href="/Product/Index" class="btn btn-success rounded">Alışverişe Devam Et</a>
+                </div>
+            </div>
+            <div class="block-content-outer">
+                <div class="block-content-inner">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Ürün Adı</th>
+                                <th>Kategori</th>
+                                <th>Fiyat</th>
+                                <th>Sepetten Çıkar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(Model !=null)
+                            { 
+                            foreach (Product prd in Model)
+                            {
+                            <tr>
+                                <td>@prd.ProductName</td>
+
+
+                                @if (prd.CategoryID == null)
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <span class="label label-primary">@prd.Category.CategoryName</span>   @*Renklendirmeyi koyu mavi yaptık*@
+
+                                    </td>
+                                }
+                                @if (prd.SupplierID == null)
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <span class="label label-primary">@prd.Supplier.CompanyName</span>   @*Renklendirmeyi koyu mavi yaptık*@
+
+                                    </td>
+                                }
+                                <td>@prd.UnitPrice</td>
+                                <td>@prd.UnitsInStock</td>
+                                <td>
+                                    <a href="#" data-id=@prd.ProductID class="btn btn-primary rounded sepettenCikar">Sepetten Çıkar</a>
+                                </td>
+                            </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+<script src="~/Content/assets/js/required/jquery-1.11.1.min.js"></script>
+    <script>
+        $(".sepettenCikar").click(function () {
+            var id = $(this).attr("data-id");
+            $.ajax({
+                type: "POST",
+                url: "/Product/MyCart/" + id,
+                success: function (messageRemoveFromCart) {
+                    alert(messageRemoveFromCart);
+                    //location.reload();
+                },
+                error: function () {
+                    alert("Sepeten çıkarılırken ajax hatası oluştu");
+                }
+            });
+        });
+    </script>
+}

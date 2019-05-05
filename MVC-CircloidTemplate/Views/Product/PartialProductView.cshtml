@@ -1,0 +1,33 @@
+﻿@using MVC_CircloidTemplate.Models;
+@model List<Product>
+
+@if (Model != null)
+{
+	<a href="#" class="top">
+		<span class="glyphicon-shopping-cart"></span>
+		<span class="main-menu-text">
+			Sepetim(@Model.Count)
+
+			<i class="icon icon-arrow-down-bold-round icon-size-small"></i>
+		</span>
+	</a>
+	<ul>
+		@foreach (Product prod in Model)
+		{
+			<li>
+				<a href="/Product/UpdateProduct?id=@prod.ProductID&pName=@prod.ProductName&pFrom=Detay">
+					<span aria-hidden="true" class="icon icon-arrow-curve-right"></span>
+					<span class="main-text">@prod.ProductName </span>
+				</a>
+			</li>
+		}
+
+		<li>
+			<a href="/Product/MyCart">
+				<span aria-hidden="true" class="icon icon-arrow-curve-right"></span>
+				<span class="main-text">Sepete Git</span>
+			</a>
+		</li>
+
+	</ul>
+}

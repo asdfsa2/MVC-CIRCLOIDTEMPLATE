@@ -1,0 +1,162 @@
+﻿
+@{
+    ViewBag.Title = "Tedarikçiler";
+}
+@using MVC_CircloidTemplate.Models;
+@model List<Supplier>
+
+@section head
+	{
+    @********************************BURASI MODAL İLE SİLME İŞLEMİNİN MODAL'İ AÇMA METODU****************************@
+    <style>
+        .hata {
+            color: red;
+        }
+    </style>
+    <script src="~/Content/assets/js/required/jquery-1.11.1.min.js"></script>
+    <script>
+$(document).ready(function () {
+				$(".modalAc").click(function () {
+					const sirketAdi = $(this).data("tedname");
+					const id = $(this).data("tedid");
+					console.log(sirketAdi, id);
+					$(".modal-body > p.mesaj").html(sirketAdi + " tedarikçisi silinsin mi?");
+					$(".tedModalSil").data("tedid", id);
+				});
+    //*********************************************************************************************************
+    //**************************************************BURASI ALERT İLE SİLME İÇİN*******************************
+				$(".tedSil").click(function () {
+					var sonuc = confirm("Kayıt silinsin mi?");
+					if (sonuc) {
+						var tedID = $(this).data("tedid");
+						$.ajax({
+							type: "POST",
+							url: "/Supplier/DeleteSupplier/" + tedID,
+							success: function () {
+								alert("Kayıt silindi");
+								window.location.replace("/Supplier/Index");
+							},
+							error: function () {
+								alert("Kayıt silme sırasında hata oluştu.");
+							}
+						})
+					}
+				});
+    //************************************************************************************************************
+    //***********************************************BURASI MODAL İLE SİLMENİN SİLME METODU*****************
+				$(".tedModalSil").click(function () {
+					const tedID = $(this).data("tedid");
+					console.log(tedID);
+					$.ajax({
+						type: "POST",
+						url: "/Supplier/DeleteSupplier/" + tedID,
+						success: function (durum) {
+							if (durum === "OK") {
+								alert("Kayıt silindi");
+								window.location.replace("/Supplier/Index");
+							}
+							else {
+								alert("Kayıt silme sırasında hata oluştu.");
+							}
+						},
+						error: function () {
+							alert("Kayıt silme sırasında hata oluştu.");
+						}
+					})
+				});
+			});</script>
+    @*//********************************************************************************************************@
+}
+<br />
+<br />
+<div class="row">
+    <div class="col-md-12">
+        @* 6'yı 12 yaptık.Tam ekranda göstermek için. Ekranın yarısında göstermek için 6 *@
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+                    Tedarikçiler
+                </div>
+                <div class="block-controls">
+                   
+                    <span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>  @*aşağı doğru açılır kapanır.collapse yapar.*@
+                    <a href="/Supplier/AddSupplier" class="btn btn-success rounded">Tedarikçi Ekle</a>
+                </div>
+            </div>
+            <div class="block-content-outer">
+                <div class="block-content-inner">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Şirket Adı</th>
+                                <th>İlgili Kişi</th>
+                                <th>İlgili Kişi Ünvanı</th>
+                                <th>Adres</th>
+                                <th>Şehir</th>
+                                <th>Bölge</th>
+                                <th>Posta Kodu</th>
+                                <th>Ülke</th>
+                                <th>Telefon</th>
+                                <th>Faks</th>
+                                <th>Güncelle</th>
+                                <th>Sil</th>   @*Tablo içerisine sil Kolonu için*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Supplier sup in Model)
+                            {
+                                <tr>
+                                    <td>@sup.CompanyName</td>
+                                    <td>@sup.ContactName</td>
+                                    <td>@sup.ContactTitle</td>
+                                    <td>@sup.Address</td>
+                                    <td>@sup.City</td>
+                                    <td>@sup.Region</td>
+                                    <td>@sup.PostalCode</td>
+                                    <td>@sup.Country</td>
+                                    <td>@sup.Phone</td>
+                                    <td>@sup.Fax</td>
+                                   
+
+                                    <td><a href="/Supplier/UpdateSupplier?supID=@sup.SupplierID" class="btn btn-primary rounded">Güncelle</a></td>
+                                  
+                                    <td><a href="/Supplier/DeleteSupplier?supID=@sup.SupplierID" class="btn btn-danger rounded">Sor&Sil</a></td>   @*Sorarak farklı bir sayfa açıp Silme *@
+                                    @*Burada sil butonuna tıklanan tedarikçinin ID'sini alıp controllera yollar.*@
+                                    <td>
+                                   <a href="#" class="btn btn-danger tedSil" data-tedid="@sup.SupplierID">Alert ile Sil</a> @*Alert İle Silme*@
+                            <button class="btn btn-danger modalAc" data-toggle="modal" data-target="#myModal" data-tedid="@sup.SupplierID" data-tedname="@sup.CompanyName">Modal ile Sil </button> @*Model İle Silme*@
+                                    </td>
+                                        
+
+</tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section body
+{
+    <!-- Modal small-modal -->                              @* BURASI MODAL İLE SİLME İÇİN *@
+    <div class="modal fade small-modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="small-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" data-border-top="multi">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="small-modal-label">Tedarikçi Silme Ekranı</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="mesaj" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                    <button type="button" class="btn btn-danger tedModalSil">Sil</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    }

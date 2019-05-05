@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "Kategoriler";
+}
+@using MVC_CircloidTemplate.Models;
+@model List<Category>
+
+<div class="row">
+    <div class="col-md-12">   @*  6'yı 12 yaptık.Tam ekranda göstermek için. Ekranın yarısında göstermek için 6   *@
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+                    Kategoriler
+                </div>
+                <div class="block-controls">
+                    @*<a href="/Product/AddProduct"> </a>*@
+                    @*<button type="button" class="btn btn-success rounded">Ürün Ekle</button>*@
+                    <span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>   @*  aşağı doğru açılır kapanır.collapse yapar.*@
+                    <a href="/Category/AddCategory" class="btn btn-success rounded">Kategori Ekle</a>    @*KATEGORİ EKLE BUTONUNA TIKLANDIĞINDA *@
+                </div>
+            </div>
+            <div class="block-content-outer">
+                <div class="block-content-inner">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Kategori Adı</th>  @*  Bunların her biri bir kolon açar.  *@
+                                <th>Açıklama</th>
+                                <th>Resim</th>
+                                <th>Güncelle</th> @*Tablo içerisine Güncelle butonu için*@
+                                <th>Yeni Sayfada Sil</th> 
+                                <th>Ajax İle Sil</th>   @*Tablo içerisine sil butonu için*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Category cat in Model)
+                            {
+                            <tr>
+                                <td>@cat.CategoryName</td>
+                                <td>@cat.Description</td>
+                                <td><img src="@String.Format("data:image/jpg;base64,{0}",cat.Base64String)" alt="Kategori Resim" width="100" height="100" /></td>
+
+                                <td><a href="/Category/UpdateCategory?catID=@cat.CategoryID" class="btn btn-primary rounded">Güncelle</a></td>
+                                @* BURASI ÖNEMLİ.....Burada güncelle butonuna tıklanan kategorinin ID'sini alıp controllera yollar.*@
+
+                                <td><a href="/Category/DeleteCategory?catID=@cat.CategoryID" class="btn btn-danger rounded">Sil</a></td>
+                              
+                                @*Burada sil butonuna tıklanan kategorinin ID'sini alıp controllera yollar.*@
+
+                                <td><a href="#" class="btn btn-danger rounded ktgSil" data-ktgID="@cat.CategoryID" >Sor&Sil</a></td>
+                                @*a'nın href'ine birşey yazarsak Ajax yazamayız. Tıklandığında bir yere gitmesini istemiyorsak # yazarız.
+                                                     Yani bir yere yönlendirme yapmıyoruz demektir.*@
+                                         @*          AJAX ile silme işlemi için          *@
+                              
+                               
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*****************************************AJAX İLE SİLME*********************************************************@ 
+@section scripts{
+<script src="~/Content/assets/js/required/jquery-1.11.1.min.js"></script>
+    <script>
+        $(".ktgSil").click(function () {
+            //alert("ktgSil click olayını yakaladı");
+            //var answer = confirm("Kayıt Silinsin mi?");
+            //if (answer) {    
+            //    alert("Evet'e basıldı");
+            //}
+            //else {
+            //    alert("iptale basıldı");
+            //}
+            var answer = confirm("Kayıt silinsin mi?");
+            if (answer) {
+                var ktgID = $(this).attr("data-ktgID");
+                alert(ktgID);
+                $.ajax({
+                    type: "POST",
+                    url: "/Category/DeleteCategory/" + ktgID,
+                    success: function () {
+                        alert("Kayıt silindi");
+                        window.location.replace("/Category/Index/");
+                    },
+                    error: function () {
+                        alert("Kayıt silme işlemi başarısız oldu");
+                    }
+
+                });
+
+            }
+            else {
+                alert("İptal'e basıldı");
+            }
+        });
+    </script>
+}
+@****************************************************************************************************@

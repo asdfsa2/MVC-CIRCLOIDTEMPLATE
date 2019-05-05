@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "Tedarikçi Ekleme";
+}
+@using MVC_CircloidTemplate.Models;
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+                    Tedarikçi Ekleme Sayfası
+                </div>
+                <div class="block-controls">
+                    <a href="/Supplier/Index">  @*  Ekranda X ile sayfayı kapattığımda /Supplier/Index view'ını çalıştırır.*@ 
+                        <span aria-hidden="true" class="icon icon-cross icon-size-medium block-control-remove"></span>
+                    </a>
+                    <span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>   @*Collapse ikonuna basıldığında*@ 
+                </div>
+            </div>
+            <div class="block-content-outer">
+                <div class="block-content-inner">
+                    <form action="/Supplier/AddSupplier" method="post" role="form">    @*POST ACTİON METODU İÇİN*@
+                        @*   Form, Post için gerekli. Action tanımladık*@
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Şirket Adı:</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Şirket adı giriniz" name="CompanyName">
+                        </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Bağlantı Adı:</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Bağlantı adı giriniz" name="ContactName">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Bağlantı Başlığı:</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Bağlantı başlığı giriniz" name="ContactTitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Adres :</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Adres  giriniz" name="Address">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Şehir :</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Şehir  giriniz" name="City">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Bölge :</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Bölge  giriniz" name="Region">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Posta Kodu :</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Posta Kodu giriniz" name="PostalCode">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Ülke :</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Ülke  giriniz" name="Country">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Telefon :</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Telefon numarası  giriniz" name="Phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Faks :</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Faks numarası  giriniz" name="Fax"> 
+                    </div>
+
+                        @*<div class="form-group">
+                            <label for="input-demo-v">Tedarikçi:</label>
+                            <select id="input-demo-v" class="form-control" name="SupplierID">
+                                @foreach (Supplier sup in ViewBag.supList)
+                                {
+                                    <option value="@sup.SupplierID">@sup.CompanyName</option>
+                                }
+                            </select>
+                        </div>*@
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                        <!--Submit içinde bulunduğu formun actionında hangi adres ve method tipi belirtilmişse eğer method post ise formun içindeki verileri post eder.-->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

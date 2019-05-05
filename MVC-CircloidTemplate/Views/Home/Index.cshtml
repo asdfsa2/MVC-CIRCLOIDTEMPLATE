@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Ana Sayfa";     /*Layouttan türüyor.Bu yüzden Layout'a yüklediğimiz templatein bütün özelliklerini bu View ekranında görüyoruz.
+                                 Açılan sayfada sadece bukodlar varken çalıştırıldığında RenderBody bölümü boş gelecek*/
+}
+
+<table border="1">
+	<thead>
+		<tr>
+			<th>Aktif Kullanıcı Sayısı</th>
+			<th>Toplam Ziyaretçi Sayısı</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>@ViewBag.OnlineUserCount</td>
+			<td>@ViewBag.TotalUserCount</td>
+		</tr>
+	</tbody>
+</table>

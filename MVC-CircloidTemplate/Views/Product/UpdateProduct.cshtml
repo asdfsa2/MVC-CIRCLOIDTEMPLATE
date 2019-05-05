@@ -1,0 +1,106 @@
+﻿
+@{
+	ViewBag.Title = "Ürün Güncelleme";
+}
+@using MVC_CircloidTemplate.Models;
+@model Product
+
+<div class="row">
+	<div class="col-md-12 col-sm-12">
+		<div class="block">
+			<div class="block-heading">
+				<div class="main-text h2">
+					Ürün @ViewBag.pFrom Sayfası
+				</div>
+
+				<div class="block-controls">
+					<a href="/Product/Index">
+
+						<span aria-hidden="true" class="icon icon-cross icon-size-medium block-control-remove"></span>
+					</a>
+					<span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>
+				</div>
+			</div>
+			<div class="block-content-outer">
+				<div class="block-content-inner">
+					<form action="/Product/UpdateProduct" method="post" role="form">
+						@*   Form, Post için gerekli. Action tanımladık*@
+
+
+
+
+						<div class="form-group">
+							<label for="exampleInputEmail1">Ürün Adı:</label>
+							<input type="text" class="form-control" id="exampleInputEmail1" name="ProductName" value="@Model.ProductName">
+						</div>
+						<div class="form-group">
+							<label for="input-demo-v">Tedarikçi:</label>
+							<select id="input-demo-v" class="form-control" name="SupplierID">
+								@foreach (Supplier sup in ViewBag.supList)
+								{
+									if (sup.SupplierID == Model.SupplierID)
+									{
+										<option value="@sup.SupplierID" selected>@sup.CompanyName</option>
+									}
+									else
+									{
+										<option value="@sup.SupplierID">@sup.CompanyName</option>
+									}
+
+								}
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label for="input-demo-v">Kategori:</label>
+							<select id="input-demo-v" class="form-control" name="CategoryID">
+								@foreach (Category cat in ViewBag.ctgList)
+								{
+									if (cat.CategoryID == Model.CategoryID)
+									{
+										<option value="@cat.CategoryID" selected>@cat.CategoryName</option>
+									}
+									else
+									{
+										<option value="@cat.CategoryID">@cat.CategoryName</option>
+									}
+
+								}
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Birimdeki Miktar:</label>
+							<input type="text" class="form-control" id="exampleInputEmail1" name="QuantityPerUnit" value="@Model.QuantityPerUnit">
+						</div>
+						<div class="form-group">
+							<label for="exampleInputPassword1">Fiyat:</label>
+							<input type="text" class="form-control" id="exampleInputPassword1" name="UnitPrice" value="@Model.UnitPrice">
+						</div>
+						<div class="form-group">
+							<label for="exampleInputPassword1">Stok:</label>
+							<input type="number" class="form-control" id="exampleInputPassword1" name="UnitsInStock" value="@Model.UnitsInStock">
+						</div>
+						<div class="form-group">
+							<label for="exampleInputPassword1">Siparişteki Miktar:</label>
+							<input type="number" class="form-control" id="exampleInputPassword1" name="UnitsOnOrder" value="@Model.UnitsOnOrder">
+						</div>
+						<div class="form-group">
+							<label for="exampleInputPassword1">Yeniden Sipariş Miktarı:</label>
+							<input type="number" class="form-control" id="exampleInputPassword1" name="ReorderLevel" value="@Model.ReorderLevel">
+						</div>
+
+
+						<input type="Hidden" name="ProductID" value="@Model.ProductID" />
+						@if (ViewBag.pFrom == "Güncelleme")
+						{
+							<button type="submit" class="btn btn-primary">Kaydet</button>
+						}
+
+						<!--Submit içinde bulunduğu formun actionında hangi adres ve method tipi belirtilmişse eğer method post ise formun içindeki verileri post eder.-->
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
